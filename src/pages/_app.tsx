@@ -3,8 +3,6 @@ import { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
   // const [isInTelegram, setIsInTelegram] = useState(false);
-  // console.log(window.Telegram);
-
 
   // // 检测是否在 Telegram Web App 中
   // const isInTelegramWebApp = () => {
