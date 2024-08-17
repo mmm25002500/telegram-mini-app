@@ -1,40 +1,50 @@
 import { useEffect, useState } from 'react';
 
-const MyApp = () => {
-  const [inTelegram, setInTelegram] = useState(false);
+const IndexPage = () => {
+  const [isInTelegram, setIsInTelegram] = useState(false);
+
+  // 检测是否在 Telegram Web App 中
+  const isInTelegramWebApp = () => {
+    return (
+      typeof window !== 'undefined' &&
+      typeof window.Telegram !== 'undefined' &&
+      typeof window.Telegram.WebApp !== 'undefined'
+    );
+  };
 
   useEffect(() => {
-    const checkTelegram = isInTelegramWebApp();
-    setInTelegram(checkTelegram);
+    const telegramDetected = isInTelegramWebApp();
+    setIsInTelegram(telegramDetected);
 
-    if (checkTelegram) {
-      // 在 Telegram Web App 中，初始化 Web App
+    if (telegramDetected) {
       const tg = window.Telegram.WebApp;
       tg.ready();
+      console.log('Telegram Web App is ready.');
+
+      // 设置主按钮
       tg.MainButton.setText('Click me');
       tg.MainButton.show();
+
+      tg.MainButton.onClick(() => {
+        tg.sendData('Button clicked!');
+        console.log('Main button clicked.');
+      });
     } else {
-      // 不在 Telegram Web App 中，显示二维码或其他提示
-      console.log('Not in Telegram Web App');
+      console.log('Not running inside Telegram Web App.');
     }
   }, []);
 
   return (
-    <div>
-      {inTelegram ? (
-        <div>Welcome to My Telegram Web App</div>
+    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+      {isInTelegram ? (
+        <h1>Welcome to My Telegram Web App</h1>
       ) : (
         <div>
-          <h1>请使用 Telegram 打开</h1>
-          <img src="path_to_your_qr_code_image" alt="Scan QR code to open in Telegram" />
+          <h1>请使用 <strong>Telegram</strong> 打开</h1>
         </div>
       )}
     </div>
   );
 };
 
-function isInTelegramWebApp() {
-  return typeof window !== 'undefined' && typeof window.Telegram !== 'undefined' && typeof window.Telegram.WebApp !== 'undefined';
-}
-
-export default MyApp;
+export default IndexPage;
