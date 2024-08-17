@@ -1,27 +1,21 @@
 import { useEffect, useState } from 'react';
 
 const IndexPage = () => {
-  const [isInTelegram, setIsInTelegram] = useState(false);
-
-  // 检测是否在 Telegram Web App 中
-  const isInTelegramWebApp = () => {
-    return (
-      typeof window !== 'undefined' &&
-      typeof window.Telegram !== 'undefined' &&
-      typeof window.Telegram.WebApp !== 'undefined'
-    );
-  };
+  const [isTelegramWebApp, setIsTelegramWebApp] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const telegramDetected = isInTelegramWebApp();
-    setIsInTelegram(telegramDetected);
+    console.log('Running useEffect...');
+    if (window.Telegram) {
+      setIsTelegramWebApp(true);
+      console.log('Telegram Web App detected.');
+      setIsReady(false);
 
-    if (telegramDetected) {
       const tg = window.Telegram.WebApp;
       tg.ready();
       console.log('Telegram Web App is ready.');
+      setIsReady(true);
 
-      // 设置主按钮
       tg.MainButton.setText('Click me');
       tg.MainButton.show();
 
@@ -30,18 +24,22 @@ const IndexPage = () => {
         console.log('Main button clicked.');
       });
     } else {
-      console.log('Not running inside Telegram Web App.');
+      console.log('Telegram Web App not detected.');
+      setIsTelegramWebApp(false);
     }
   }, []);
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      {isInTelegram ? (
-        <h1>Welcome to My Telegram Web App</h1>
+    <div>
+      {isReady ? (
+        <p>Telegram Web App is ready.</p>
       ) : (
-        <div>
-          <h1>请使用 <strong>Telegram</strong> 打开</h1>
-        </div>
+          <p>Telegram Web App is not ready.</p>
+        )}
+      {isTelegramWebApp ? (
+        <p>Telegram Web App detected.</p>
+      ) : (
+        <p>Telegram Web App not detected.</p>
       )}
     </div>
   );
