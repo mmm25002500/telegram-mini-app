@@ -17,13 +17,13 @@ const IndexPage = () => {
     }
   }, []);
 
-  // if (platform === 'unknown') {
-  //   return (
-  //     <div>
-  //       <p>請使用 Telegram App</p>
-  //     </div>
-  //   );
-  // }
+  if (platform === 'unknown') {
+    return (
+      <div>
+        <p>請使用 Telegram App</p>
+      </div>
+    );
+  }
 
   return (
     <div>
